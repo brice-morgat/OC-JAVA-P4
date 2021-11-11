@@ -61,5 +61,4 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
     }
-
 }
