@@ -15,6 +15,8 @@ public class FareCalculatorService {
 
         //TODO: correction made: retrieving a timestamp and converting it to an hour.
         double duration = (outHour - inHour) / 3600000;
+        System.out.println(duration);
+
 
         //Check if the duration is greater or less than 30 minutes
         if (duration <= 0.5) {
@@ -23,6 +25,7 @@ public class FareCalculatorService {
 
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
+                System.out.println(duration);
                 ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
                 break;
             }
