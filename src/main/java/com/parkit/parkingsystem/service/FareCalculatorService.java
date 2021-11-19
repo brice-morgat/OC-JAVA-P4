@@ -13,7 +13,7 @@ public class FareCalculatorService {
         double inHour = ticket.getInTime().getTime();
         double outHour = ticket.getOutTime().getTime();
 
-        //TODO: correction made: retrieving a timestamp and converting it to an hour.
+        //TODO: Correction made: retrieving a timestamp and converting it to an hour.
         double duration = (outHour - inHour) / 3600000;
         System.out.println(duration);
 
