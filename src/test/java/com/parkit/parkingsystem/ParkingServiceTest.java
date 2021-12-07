@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 public class  ParkingServiceTest {
 
     private static ParkingService parkingService;
-
     @Mock
     private static InputReaderUtil inputReaderUtil;
     @Mock
@@ -44,7 +43,6 @@ public class  ParkingServiceTest {
             when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 
             when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         } catch (Exception e) {
             e.printStackTrace();

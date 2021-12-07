@@ -1,11 +1,11 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
-
-    public void calculateFare(Ticket ticket){
+    public void calculateFare(Ticket ticket, boolean isRecurring){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -23,14 +23,15 @@ public class FareCalculatorService {
             duration = 0;
         }
 
+
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 System.out.println(duration);
-                ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+                ticket.setPrice(isRecurring ? (duration * Fare.CAR_RATE_PER_HOUR) - ((duration * Fare.CAR_RATE_PER_HOUR) * 0.05) : (duration * Fare.CAR_RATE_PER_HOUR));
                 break;
             }
             case BIKE: {
-                ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+                ticket.setPrice(isRecurring ? (duration * Fare.BIKE_RATE_PER_HOUR) - ((duration * Fare.BIKE_RATE_PER_HOUR) * 0.05): (duration * Fare.BIKE_RATE_PER_HOUR));
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
