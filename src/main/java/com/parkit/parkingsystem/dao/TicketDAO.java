@@ -8,16 +8,15 @@ import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
+
+    public String GET_TICKET = DBConstants.GET_TICKET;
 
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
@@ -45,7 +44,7 @@ public class TicketDAO {
         Ticket ticket = null;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+            PreparedStatement ps = con.prepareStatement(GET_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
@@ -61,7 +60,7 @@ public class TicketDAO {
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
-        }catch (Exception ex){
+        }catch (Exception ex) {
             logger.error("Error fetching next available slot",ex);
         }finally {
             dataBaseConfig.closeConnection(con);
@@ -80,8 +79,29 @@ public class TicketDAO {
             ps.execute();
             return true;
         }catch (Exception ex){
-            logger.error("Error saving ticket info",ex);
+            logger.error("Error saving ticket info", ex);
         }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
+
+    public boolean isRecurring(Ticket ticket) {
+        Connection con = null;
+        int i = 0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECURRING);
+            ps.setString(1, ticket.getVehicleRegNumber());
+            ResultSet rs = ps.executeQuery();
+            for(; rs.next(); i++);
+            if(i >= 2) {
+                System.out.println("L'utilisateur est récurrent");
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error("Error get recurring", ex);
+        } finally {
             dataBaseConfig.closeConnection(con);
         }
         return false;
