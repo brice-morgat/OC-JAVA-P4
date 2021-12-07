@@ -65,6 +65,10 @@ public class ParkingDataBaseIT {
         dataBasePrepareService.clearDataBaseEntries();
     }
 
+    /**
+     * Test d'entrée d'un véhicule
+     * Vérification en base de donnée de la bonne sauvegarde des informations
+     */
     @Test
     public void testParkingACar() {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
@@ -98,27 +102,38 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingLotExit() {
+    private void testParkingLotExit() {
         testParkingLotExit(false);
     }
 
-    @Test
+
+    /**
+     * Test de sortie d'un véhicule
+     * Vérification en base de donnée de la bonne mise à jour des informations
+     */
     public void testParkingLotExit(boolean isRecurring){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         boolean priceUpdated = false;
         boolean outTimeGenerated = false;
         testParkingACar();
-        ticketDAO.GET_TICKET = DBConstants.GET_TICKET_OUT;
         Ticket ticket = ticketDAO.getTicket(vehiculeRegNumber);
-        long outTIme = (ticket.getInTime().getTime() + ( 24 * 60 * 60 * 1000));
+        long outTIme = (ticket.getInTime().getTime() + (60 * 60 * 1000));
         parkingService.processExitingVehicle(new Date(outTIme));
 
-        System.out.println("Temps à l'entrée du parking : "
-                + ticket.getInTime());
         //TODO: check that the fare generated and out time are populated correctly in the database
+        ticketDAO.GET_TICKET = DBConstants.GET_TICKET_OUT;
         Ticket resTicket = ticketDAO.getTicket(vehiculeRegNumber);
-        assertEquals(resTicket.getPrice(), Fare.CAR_RATE_PER_HOUR * );
+        assertEquals(Fare.CAR_RATE_PER_HOUR - (isRecurring ? Fare.CAR_RATE_PER_HOUR * Fare.DISCOUNT_RECURRING : 0), resTicket.getPrice());
         assertTrue(resTicket.getOutTime().getTime() == outTIme);
+    }
 
+    /**
+     * Test de la réduction de 5% pour les utilisateurs récurrent
+     */
+    @Test
+    public void testRecurringDiscount() {
+        testParkingLotExit();
+        testParkingLotExit(true);
+        testParkingLotExit(true);
     }
 }

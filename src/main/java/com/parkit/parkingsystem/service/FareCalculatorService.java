@@ -26,12 +26,13 @@ public class FareCalculatorService {
 
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                System.out.println(duration);
-                ticket.setPrice(isRecurring ? (duration * Fare.CAR_RATE_PER_HOUR) - ((duration * Fare.CAR_RATE_PER_HOUR) * 0.05) : (duration * Fare.CAR_RATE_PER_HOUR));
+                //Calcul du prix en fonction de la récurrence de l'utilisateur
+                ticket.setPrice(isRecurring ? (duration * Fare.CAR_RATE_PER_HOUR) - ((duration * Fare.CAR_RATE_PER_HOUR) * Fare.DISCOUNT_RECURRING) : (duration * Fare.CAR_RATE_PER_HOUR));
                 break;
             }
             case BIKE: {
-                ticket.setPrice(isRecurring ? (duration * Fare.BIKE_RATE_PER_HOUR) - ((duration * Fare.BIKE_RATE_PER_HOUR) * 0.05): (duration * Fare.BIKE_RATE_PER_HOUR));
+                //Calcul du prix en fonction de la récurrence de l'utilisateur
+                ticket.setPrice(isRecurring ? (duration * Fare.BIKE_RATE_PER_HOUR) - ((duration * Fare.BIKE_RATE_PER_HOUR) * Fare.DISCOUNT_RECURRING): (duration * Fare.BIKE_RATE_PER_HOUR));
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");

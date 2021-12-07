@@ -61,8 +61,9 @@ public class FareCalculatorServiceTest {
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, null, false);
-
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        parkingSpot.setParkingType(null);
+        parkingSpot.setId(1);
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
@@ -156,10 +157,9 @@ public class FareCalculatorServiceTest {
     @Test
     public void calculateFareBikeWithLessThanHalfHourParkingTime() {
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (29 * 60 * 1000) );//24 hours parking time should give 24 * parking fare per hour
+        inTime.setTime( System.currentTimeMillis() - (29 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
-
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
@@ -167,10 +167,13 @@ public class FareCalculatorServiceTest {
         assertEquals( (0 * Fare.BIKE_RATE_PER_HOUR) , ticket.getPrice());
     }
 
+    /**
+     * Test de calcul de prix du ticket voiture pour une heure avec une réduction de 5%
+     */
     @Test
     public void calculateFareCarWithFivePourcentDiscountWhenRecurring() {
         Date inTime = new Date();
-        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));//60 minutes parking time should give  parking fare
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));//60 minutes parking time should give parking fare with 5% discount
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -181,6 +184,9 @@ public class FareCalculatorServiceTest {
         assertEquals(((1 * Fare.CAR_RATE_PER_HOUR) - ((1 * Fare.CAR_RATE_PER_HOUR) * 0.05)), ticket.getPrice());
     }
 
+    /**
+     * Test de calcul de prix du ticket vélo pour une heure avec une réduction de 5%
+     */
     @Test
     public void calculateFareBikeWithFivePourcentDiscountWhenRecurring() {
         Date inTime = new Date();

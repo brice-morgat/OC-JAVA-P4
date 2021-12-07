@@ -26,16 +26,17 @@ import com.parkit.parkingsystem.model.Ticket;
 
 <span class="pc bpc" id="L27" title="1 of 3 branches missed.">        switch (ticket.getParkingSpot().getParkingType()){</span>
             case CAR: {
-<span class="fc" id="L29">                System.out.println(duration);</span>
-<span class="fc bfc" id="L30" title="All 2 branches covered.">                ticket.setPrice(isRecurring ? (duration * Fare.CAR_RATE_PER_HOUR) - ((duration * Fare.CAR_RATE_PER_HOUR) * 0.05) : (duration * Fare.CAR_RATE_PER_HOUR));</span>
+                //Calcul du prix en fonction de la récurrence de l'utilisateur
+<span class="fc bfc" id="L30" title="All 2 branches covered.">                ticket.setPrice(isRecurring ? (duration * Fare.CAR_RATE_PER_HOUR) - ((duration * Fare.CAR_RATE_PER_HOUR) * Fare.DISCOUNT_RECURRING) : (duration * Fare.CAR_RATE_PER_HOUR));</span>
 <span class="fc" id="L31">                break;</span>
             }
             case BIKE: {
-<span class="fc bfc" id="L34" title="All 2 branches covered.">                ticket.setPrice(isRecurring ? (duration * Fare.BIKE_RATE_PER_HOUR) - ((duration * Fare.BIKE_RATE_PER_HOUR) * 0.05): (duration * Fare.BIKE_RATE_PER_HOUR));</span>
-<span class="fc" id="L35">                break;</span>
+                //Calcul du prix en fonction de la récurrence de l'utilisateur
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                ticket.setPrice(isRecurring ? (duration * Fare.BIKE_RATE_PER_HOUR) - ((duration * Fare.BIKE_RATE_PER_HOUR) * Fare.DISCOUNT_RECURRING): (duration * Fare.BIKE_RATE_PER_HOUR));</span>
+<span class="fc" id="L36">                break;</span>
             }
-<span class="nc" id="L37">            default: throw new IllegalArgumentException(&quot;Unkown Parking Type&quot;);</span>
+<span class="nc" id="L38">            default: throw new IllegalArgumentException(&quot;Unkown Parking Type&quot;);</span>
         }
-<span class="fc" id="L39">    }</span>
+<span class="fc" id="L40">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
