@@ -51,6 +51,7 @@ public class ParkingService {
             }
         }catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
+            throw new IllegalArgumentException("Exception");
         }
     }
 
@@ -72,6 +73,7 @@ public class ParkingService {
             }
         }catch(IllegalArgumentException ie){
             logger.error("Error parsing user input for type of vehicle", ie);
+            throw new IllegalArgumentException();
         }catch(Exception e){
             logger.error("Error fetching next available parking slot", e);
         }

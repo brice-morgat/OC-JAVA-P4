@@ -1,7 +1,6 @@
 package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
-import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -21,4 +20,13 @@ public class DataBaseTest {
         dataBaseTestConfig.closeConnection(db);
     }
 
+    @Test
+    public void errorConnectionTest() throws SQLException, ClassNotFoundException {
+        Connection db = null;
+        db = dataBaseTestConfig.getConnection();
+        PreparedStatement rs = db.prepareStatement("SELECT * FROM ticket");
+        rs.executeQuery();
+        dataBaseTestConfig.closePreparedStatement(rs);
+        dataBaseTestConfig.closeConnection(null);
+    }
 }

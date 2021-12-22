@@ -9,9 +9,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FareCalculatorServiceTest {
 
@@ -61,7 +62,7 @@ public class FareCalculatorServiceTest {
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        ParkingSpot parkingSpot = new ParkingSpot(1, null, false);
         parkingSpot.setParkingType(null);
         parkingSpot.setId(1);
         ticket.setInTime(inTime);
@@ -200,4 +201,5 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket, true);
         assertEquals(((1 * Fare.BIKE_RATE_PER_HOUR) - ((1 * Fare.BIKE_RATE_PER_HOUR) * 0.05)), ticket.getPrice());
     }
+
 }
