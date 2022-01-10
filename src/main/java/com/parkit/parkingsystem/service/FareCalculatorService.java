@@ -1,7 +1,6 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
-import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
@@ -15,8 +14,6 @@ public class FareCalculatorService {
 
         //TODO: Correction made: retrieving a timestamp and converting it to an hour.
         double duration = (outHour - inHour) / 3600000;
-        System.out.println(duration);
-
 
         //Check if the duration is greater or less than 30 minutes
         if (duration <= 0.5) {

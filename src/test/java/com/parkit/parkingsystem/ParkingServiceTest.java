@@ -32,14 +32,25 @@ public class  ParkingServiceTest {
 
     @BeforeEach
     private void setUpPerTest() {
-
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-
     }
 
     @Test
-    public void processExitingVehicleTest() throws Exception {
+    @DisplayName("Test Entrée de véhicule")
+    public void processIncomingVehicleTest() throws Exception {
         //Given
+        when(inputReaderUtil.readSelection()).thenReturn(1);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+        when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
+        //WHEN
+        parkingService.processIncomingVehicle();
+    }
+
+    @Test
+    @DisplayName("Test Sortie de véhicule")
+    public void processExitingVehicleTest() throws Exception {
+        //GIVEN
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -52,9 +63,9 @@ public class  ParkingServiceTest {
 
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
         parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        //When
+        //WHEN
         parkingService.processExitingVehicle();
-        //Then
+        //THEN
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
@@ -75,9 +86,10 @@ public class  ParkingServiceTest {
 
     @Test
     @DisplayName("Erreur ParkingSpot null")
-    public void parkingSpotNullForIncomingVehiculeTest() {
+    public void parkingSpotNullForIncomingVehicleTest() {
         try {
             // GIVEN
+            when(inputReaderUtil.readSelection()).thenReturn(1);
             when(parkingService.getNextParkingNumberIfAvailable()).thenReturn(null);
 
             // WHEN
@@ -90,9 +102,10 @@ public class  ParkingServiceTest {
         }
     }
 
+
     @Test
     @DisplayName("Erreur parking plein")
-    public void parkingSlotFullIncomingVehiculeTest() {
+    public void parkingSlotFullIncomingVehicleTest() {
         // GIVEN
         when(inputReaderUtil.readSelection()).thenReturn(2);
         when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(0);
@@ -109,10 +122,9 @@ public class  ParkingServiceTest {
 
     @Test
     @DisplayName("Erreur sauvegarde du ticket")
-    public void unableToUpdateTicketWhenExitingVehiculeTest() throws Exception {
+    public void unableToUpdateTicketWhenExitingVehicleTest() throws Exception {
         // GIVEN
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
         Ticket ticket = new Ticket();
         ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
@@ -121,26 +133,29 @@ public class  ParkingServiceTest {
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
 
-
         // WHEN
         parkingService.processExitingVehicle();
+        // THEN
         assertTrue(true);
     }
 
     @Test
-    public void incorrectInputWhenExitingVehiculeTest() throws Exception {
+    @DisplayName("Entrez incorrect lors de la sortie du véhicule")
+    public void incorrectInputWhenExitingVehicleTest() throws Exception {
         // GIVEN
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-
         // WHEN
         parkingService.processExitingVehicle();
-
+        // THEN
         assertThrows(IllegalArgumentException.class, () -> parkingService.processIncomingVehicle());
     }
 
     @Test
+    @DisplayName("Hashcode test pour ParkingSpot")
     public void parkingSpotHashCodeTest() {
+        // GIVEN
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
+        // THEN
         assertEquals(parkingSpot.hashCode(), 1);
     }
 }

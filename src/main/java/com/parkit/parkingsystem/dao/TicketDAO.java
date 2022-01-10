@@ -20,6 +20,7 @@ public class TicketDAO {
 
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
+        boolean isExecute = false;
         try {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
@@ -30,7 +31,9 @@ public class TicketDAO {
             ps.setDouble(3, ticket.getPrice());
             ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
             ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            return ps.execute();
+            isExecute = ps.execute();
+            ps.close();
+            return isExecute;
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
@@ -77,6 +80,7 @@ public class TicketDAO {
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
             ps.setInt(3,ticket.getId());
             ps.execute();
+            ps.close();
             return true;
         }catch (Exception ex){
             logger.error("Error saving ticket info", ex);
@@ -86,12 +90,13 @@ public class TicketDAO {
         return false;
     }
 
-    public boolean isRecurring(Ticket ticket) {
+    public boolean isRecurring(Ticket ticket) throws SQLException {
         Connection con = null;
+        PreparedStatement ps = null;
         int i = 0;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECURRING);
+            ps = con.prepareStatement(DBConstants.GET_RECURRING);
             ps.setString(1, ticket.getVehicleRegNumber());
             ResultSet rs = ps.executeQuery();
             for(; rs.next(); i++);
@@ -102,6 +107,9 @@ public class TicketDAO {
         } catch (Exception ex) {
             logger.error("Error get recurring", ex);
         } finally {
+            if(ps != null) {
+                ps.close();
+            }
             dataBaseConfig.closeConnection(con);
         }
         return false;

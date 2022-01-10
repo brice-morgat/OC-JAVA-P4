@@ -13,28 +13,44 @@ public class ParkingSpotTest {
 
     @Test
     void isEqualsParkingSpotTest() {
-        //Given
+        //GIVEN
         ParkingSpot _parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
         parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
-
+        //THEN
         assertTrue(parkingSpot.equals(_parkingSpot));
     }
 
     @Test
+    void isEqualsSameParkingSpotTest() {
+        //GIVEN
+        parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
+        //THEN
+        assertTrue(parkingSpot.equals(parkingSpot));
+    }
+
+    @Test
+    void isEqualsNullParkingSpotTest() {
+        //GIVEN
+        parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
+        //THEN
+        assertFalse(parkingSpot.equals(null));
+    }
+
+    @Test
     void isNotEqualsParkingSpotTest() {
-        //Given
+        //GIVEN
         ParkingSpot _parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
         parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-
+        //WHEN
         assertFalse(parkingSpot.equals(_parkingSpot));
     }
 
     @Test
     void isNotSameClassParkingSpotTest() {
-        //Given
+        //GIVEN
         Ticket _parkingSpot = new Ticket();
         parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-
+        //THEN
         assertFalse(parkingSpot.equals(_parkingSpot));
     }
 }

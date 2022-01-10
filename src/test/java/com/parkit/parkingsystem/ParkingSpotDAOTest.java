@@ -46,10 +46,7 @@ class ParkingSpotDAOTest {
 
     @DisplayName("Test pour vérifier si une place de parking est libre en BDD")
     @Test
-    void nextParkingSpot_shouldIsFound() throws SQLException {
-        // quand le preparedStatement GET_NEXT_PARKING_SPOT est appelé
-        // retourne le resultSet
-        // qui renvoie "true" si un emplacement suivant est trouvé
+    void nextParkingSpotShouldIsFound() throws SQLException {
         // WHEN
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
@@ -61,8 +58,7 @@ class ParkingSpotDAOTest {
 
     @DisplayName("Test pour vérifier si une place de parking est libre en BDD pour une voiture")
     @Test
-    void nextParkingSpot_shouldIsFoundforAcar() throws SQLException {
-
+    void nextParkingSpotShouldIsFoundCar() throws SQLException {
         // WHEN
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true);
@@ -73,10 +69,9 @@ class ParkingSpotDAOTest {
         assertEquals(2, result);
     }
 
-    @DisplayName("Test pour mettre à jour la disponibilite du parking en BDD pour une voiture")
+    @DisplayName("Test pour mettre à jour la disponibilité du parking en BDD pour une voiture")
     @Test
-    void updateParkingSpot_shouldForAcar() throws SQLException {
-
+    void updateParkingSpot_shouldForCar() throws SQLException {
         // GIVEN
         parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -90,13 +85,9 @@ class ParkingSpotDAOTest {
 
     @DisplayName("Test pour mettre à jour la disponibilite du parking en BDD pour un vélo")
     @Test
-    void updateParkingSpot_shouldForAbike() throws SQLException {
-        // une moto est garée à l'emplacement 4
+    void updateParkingSpotShouldForBike() throws SQLException {
         // GIVEN
         parkingSpot = new ParkingSpot(4, ParkingType.BIKE, false);
-        // quand le preparedStatement UPDATE_PARKING_SPOT est appelé
-        // dit que le parking est libre (set boolean à 1)
-        // pour l'emplacement 4
         // WHEN
         when(preparedStatement.executeUpdate()).thenReturn(1, 4);
         boolean result = parkingSpotDAO.updateParking(parkingSpot);
@@ -107,8 +98,7 @@ class ParkingSpotDAOTest {
 
     @DisplayName("Test pour une place de parking non trouvée")
     @Test
-    void nextParkingSpot_shouldIsNotFoundforAcar() throws SQLException {
-
+    void nextParkingSpotShouldIsNotFoundCar() throws SQLException {
         // WHEN
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
@@ -120,15 +110,12 @@ class ParkingSpotDAOTest {
 
     @DisplayName("Test pour une erreur lors de la mise à jour d'une place de parking")
     @Test
-    void update_shouldFail() throws SQLException {
-
+    void updateShouldFail() throws SQLException {
         // GIVEN
         parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
-
         // WHEN
         when(preparedStatement.executeUpdate()).thenThrow(SQLException.class);
         boolean result = parkingSpotDAO.updateParking(parkingSpot);
-
         // THEN
         assertFalse(result);
     }

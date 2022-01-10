@@ -26,8 +26,8 @@ public class ParkingSpot {
     }
 
     public void setParkingType(ParkingType parkingType) {
-<span class="fc" id="L29">        this.parkingType = parkingType;</span>
-<span class="fc" id="L30">    }</span>
+<span class="nc" id="L29">        this.parkingType = parkingType;</span>
+<span class="nc" id="L30">    }</span>
 
     public boolean isAvailable() {
 <span class="fc" id="L33">        return isAvailable;</span>
@@ -39,8 +39,8 @@ public class ParkingSpot {
 
     @Override
     public boolean equals(Object o) {
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (this == o) return true;</span>
-<span class="pc bpc" id="L43" title="1 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (this == o) return true;</span>
+<span class="fc bfc" id="L43" title="All 4 branches covered.">        if (o == null || getClass() != o.getClass()) return false;</span>
 <span class="fc" id="L44">        ParkingSpot that = (ParkingSpot) o;</span>
 <span class="fc bfc" id="L45" title="All 2 branches covered.">        return number == that.number;</span>
     }
