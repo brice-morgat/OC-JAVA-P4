@@ -31,7 +31,7 @@ public class  ParkingServiceTest {
     private static TicketDAO ticketDAO;
 
     @BeforeEach
-    private void setUpPerTest() {
+    private void setUpPerTest()  {
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
     }
 
@@ -43,8 +43,12 @@ public class  ParkingServiceTest {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
+        when(ticketDAO.isNotAlreadyIn(any(String.class))).thenReturn(true);
         //WHEN
         parkingService.processIncomingVehicle();
+        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
+
     }
 
     @Test
@@ -83,25 +87,6 @@ public class  ParkingServiceTest {
             assertThrows(IllegalArgumentException.class, () -> parkingService.getNextParkingNumberIfAvailable());
         }
     }
-
-    @Test
-    @DisplayName("Erreur ParkingSpot null")
-    public void parkingSpotNullForIncomingVehicleTest() {
-        try {
-            // GIVEN
-            when(inputReaderUtil.readSelection()).thenReturn(1);
-            when(parkingService.getNextParkingNumberIfAvailable()).thenReturn(null);
-
-            // WHEN
-            parkingService.processIncomingVehicle();
-        } catch (IllegalArgumentException e) {
-            // THEN
-            assertThrows(IllegalArgumentException.class, () -> parkingService.processIncomingVehicle());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     @DisplayName("Erreur parking plein")

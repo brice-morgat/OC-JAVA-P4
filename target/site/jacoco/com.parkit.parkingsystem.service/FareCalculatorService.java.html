@@ -5,7 +5,7 @@ import com.parkit.parkingsystem.model.Ticket;
 
 <span class="fc" id="L6">public class FareCalculatorService {</span>
     public void calculateFare(Ticket ticket, boolean isRecurring){
-<span class="fc bfc" id="L8" title="All 4 branches covered.">        if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){</span>
+<span class="pc bpc" id="L8" title="1 of 4 branches missed.">        if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){</span>
 <span class="fc" id="L9">            throw new IllegalArgumentException(&quot;Out time provided is incorrect:&quot;+ticket.getOutTime().toString());</span>
         }
 

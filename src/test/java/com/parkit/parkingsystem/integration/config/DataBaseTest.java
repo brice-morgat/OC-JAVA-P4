@@ -1,4 +1,4 @@
-package com.parkit.parkingsystem;
+package com.parkit.parkingsystem.integration.config;
 
 import com.parkit.parkingsystem.config.DataBaseConfig;
 import org.junit.jupiter.api.DisplayName;

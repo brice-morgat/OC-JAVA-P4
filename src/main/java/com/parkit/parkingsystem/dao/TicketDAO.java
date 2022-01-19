@@ -16,7 +16,7 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-    public String GET_TICKET = DBConstants.GET_TICKET;
+    public String GET_TICKET_OUT = DBConstants.GET_TICKET_OUT;
 
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
@@ -42,12 +42,13 @@ public class TicketDAO {
         }
     }
 
-    public Ticket getTicket(String vehicleRegNumber) {
+    public Ticket getTicket(String vehicleRegNumber) throws SQLException {
         Connection con = null;
         Ticket ticket = null;
+
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(GET_TICKET);
+            PreparedStatement ps = con.prepareStatement(GET_TICKET_OUT);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
@@ -101,17 +102,36 @@ public class TicketDAO {
             ResultSet rs = ps.executeQuery();
             for(; rs.next(); i++);
             if(i >= 2) {
-                System.out.println("L'utilisateur est récurrent");
                 return true;
             }
         } catch (Exception ex) {
             logger.error("Error get recurring", ex);
         } finally {
-            if(ps != null) {
-                ps.close();
-            }
+            ps.close();
             dataBaseConfig.closeConnection(con);
         }
         return false;
+    }
+
+    public boolean isNotAlreadyIn(String vehicleRegNumber) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int i = 0;
+        try {
+            con = dataBaseConfig.getConnection();
+            ps = con.prepareStatement(DBConstants.GET_TICKET_OUT);
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                System.out.println("Vehicle already park");
+                return false;
+            }
+        } catch (Exception ex) {
+            logger.error("Error get if vehicle is already park", ex);
+        } finally {
+            ps.close();
+            dataBaseConfig.closeConnection(con);
+        }
+        return true;
     }
 }
